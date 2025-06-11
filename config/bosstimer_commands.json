@@ -1,10 +1,8 @@
 {
   "1": [
-    "say Boss timer 1 finished!",
-    "give @a minecraft:netherite_ingot 1"
+    "say Boss timer 1 finished!"
   ],
   "2": [
-    "say Boss timer 2 done!",
-    "effect give @a minecraft:strength 60 1"
+    "say Boss timer 2 done!"
   ]
 }
