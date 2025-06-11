@@ -1,8 +1,47 @@
 {
-  "1": [
-    "say Boss timer 1 finished!"
-  ],
-  "2": [
-    "say Boss timer 2 done!"
-  ]
+  "raid_start": {
+    "duration": 60,
+    "before": [
+      "say A raid is starting soon!",
+      "effect give @a minecraft:strength 10 1 true"
+    ],
+    "after": [
+      "say The raid has begun!",
+      "execute as @a run give @s minecraft:totem_of_undying"
+    ],
+    "triggers": {
+      "30": {
+        "message": "Halfway there! 30 seconds to go!",
+        "sound": "minecraft:entity.experience_orb.pickup"
+      },
+      "10": {
+        "message": "10 seconds left, prepare yourselves!",
+        "sound": "minecraft:block.note_block.pling"
+      },
+      "5": {
+        "message": "5 seconds!",
+        "sound": "minecraft:block.note_block.bell"
+      }
+    }
+  },
+  "event_drop": {
+    "duration": 90,
+    "before": [
+      "say Supply drop incoming!",
+      "title @a title {\"text\":\"Incoming Drop\",\"color\":\"gold\"}"
+    ],
+    "after": [
+      "say The drop has landed!",
+      "give @a minecraft:diamond"
+    ],
+    "triggers": {
+      "60": {
+        "message": "1 minute until the drop!"
+      },
+      "10": {
+        "message": "10 seconds until drop!",
+        "sound": "minecraft:block.note_block.snare"
+      }
+    }
+  }
 }
