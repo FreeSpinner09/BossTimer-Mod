@@ -93,8 +93,9 @@ public class BossTimerMod implements ModInitializer {
 						)
 		);
 
+		// Changed reload command from reloadtimers to timerreload
 		dispatcher.register(
-				CommandManager.literal("reloadtimers")
+				CommandManager.literal("timerreload")
 						.requires(source -> Permissions.check(source, "bosstimer.reload", source.hasPermissionLevel(2)))
 						.executes(context -> {
 							loadConfig();
