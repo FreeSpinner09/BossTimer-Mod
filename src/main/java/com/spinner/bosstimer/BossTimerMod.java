@@ -11,9 +11,7 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.io.File;
 import java.io.FileReader;
@@ -94,6 +92,8 @@ public class BossTimerMod implements ModInitializer {
 				BossBar.Style.PROGRESS
 		);
 		bossBar.setPercent(1.0f);
+
+		// Add boss bar to all online players
 		server.getPlayerManager().getPlayerList().forEach(bossBar::addPlayer);
 
 		Timer timer = new Timer();
@@ -102,26 +102,29 @@ public class BossTimerMod implements ModInitializer {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				if (remaining[0] <= 0) {
-					bossBar.setName(Text.literal("Event started!"));
-					server.getPlayerManager().getPlayerList().forEach(bossBar::removePlayer);
-					timer.cancel();
+				// Ensure all updates run on the server thread for safety
+				server.submit(() -> {
+					if (remaining[0] <= 0) {
+						bossBar.setName(Text.literal("Event started!"));
+						server.getPlayerManager().getPlayerList().forEach(bossBar::removePlayer);
+						timer.cancel();
 
-					// Run commands
-					List<String> commands = commandConfigs.get(configId);
-					if (commands != null) {
-						for (String cmd : commands) {
-							server.getCommandManager().executeWithPrefix(server.getCommandSource(), cmd);
+						// Execute commands for configId
+						List<String> commands = commandConfigs.get(configId);
+						if (commands != null) {
+							for (String cmd : commands) {
+								server.getCommandManager().executeWithPrefix(server.getCommandSource(), cmd);
+							}
 						}
+						return;
 					}
-					return;
-				}
 
-				float progress = remaining[0] / (float) seconds;
-				bossBar.setName(Text.literal("Starting in " + remaining[0] + "s"));
-				bossBar.setPercent(progress);
+					float progress = remaining[0] / (float) seconds;
+					bossBar.setName(Text.literal("Starting in " + remaining[0] + "s"));
+					bossBar.setPercent(progress);
 
-				remaining[0]--;
+					remaining[0]--;
+				});
 			}
 		}, 0, 1000);
 	}
