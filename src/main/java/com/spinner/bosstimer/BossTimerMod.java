@@ -23,7 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BossTimerMod implements ModInitializer {
 	private static final Map<String, TimerConfig> commandConfigs = new ConcurrentHashMap<>();
-	private static final Map<String, Timer> runningTimers = new ConcurrentHashMap<>();
+
+	// Store both Timer and BossBar for each running timer
+	private static final Map<String, TimerData> runningTimers = new ConcurrentHashMap<>();
 	private static boolean configLoaded = false;
 
 	@Override
@@ -52,7 +54,9 @@ public class BossTimerMod implements ModInitializer {
 										return 0;
 									}
 
-									if (!Permissions.check(source, "bosstimer.start." + name, source.hasPermissionLevel(2))) {
+									// Check specific timer permission here:
+									if (!Permissions.check(source, "bosstimer.start." + name, source.hasPermissionLevel(2))
+											&& !Permissions.check(source, "bosstimer.start", source.hasPermissionLevel(2))) {
 										source.sendError(Text.literal("You don't have permission to start this timer."));
 										return 0;
 									}
@@ -70,9 +74,16 @@ public class BossTimerMod implements ModInitializer {
 								.requires(source -> Permissions.check(source, "bosstimer.cancel", source.hasPermissionLevel(2)))
 								.executes(context -> {
 									String name = StringArgumentType.getString(context, "name");
-									Timer timer = runningTimers.remove(name);
-									if (timer != null) {
-										timer.cancel();
+									TimerData timerData = runningTimers.remove(name);
+									if (timerData != null) {
+										timerData.timer.cancel();
+
+										// Remove boss bar from all players
+										ServerBossBar bossBar = timerData.bossBar;
+										if (bossBar != null) {
+											context.getSource().getServer().getPlayerManager().getPlayerList().forEach(bossBar::removePlayer);
+										}
+
 										context.getSource().sendFeedback(() -> Text.literal("Timer '" + name + "' canceled."), false);
 									} else {
 										context.getSource().sendError(Text.literal("No active timer with name '" + name + "'."));
@@ -159,7 +170,8 @@ public class BossTimerMod implements ModInitializer {
 		server.getPlayerManager().getPlayerList().forEach(bossBar::addPlayer);
 
 		Timer timer = new Timer();
-		runningTimers.put(name, timer);
+
+		runningTimers.put(name, new TimerData(timer, bossBar));
 
 		final int[] remaining = {config.seconds()};
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -204,6 +216,8 @@ public class BossTimerMod implements ModInitializer {
 			}
 		}, 0, 1000);
 	}
+
+	private record TimerData(Timer timer, ServerBossBar bossBar) {}
 
 	private record Trigger(String message, String sound) {}
 	private record TimerConfig(int seconds, List<String> beforeCommands, List<String> afterCommands, Map<Integer, Trigger> triggers) {}
