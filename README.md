@@ -1,6 +1,6 @@
-# BossTimerMod v2.0.1 🎉
+# BossTimerMod
 
-Hey! I’m excited to share **BossTimerMod v2**, a Fabric mod that lets you create and manage server timers with boss bars, messages, and command triggers. Perfect for events like restarts, boss fights, or scheduled server actions.  
+Hey! I’m excited to share **BossTimerMod**, a Fabric mod that lets you create and manage server timers with boss bars, messages, and command triggers. Perfect for events like restarts, boss fights, or scheduled server actions.  
 
 ---
 
