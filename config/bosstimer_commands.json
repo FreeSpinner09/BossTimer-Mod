@@ -1,6 +1,7 @@
 {
   "raid_start": {
     "duration": 60,
+    "bossbar_message": "Raid starting in %s seconds",
     "before": [
       "say A raid is starting soon!",
       "effect give @a minecraft:strength 10 1 true"
@@ -11,21 +12,19 @@
     ],
     "triggers": {
       "30": {
-        "message": "Halfway there! 30 seconds to go!",
-        "sound": "minecraft:entity.experience_orb.pickup"
+        "message": "Halfway there! 30 seconds to go!"
       },
       "10": {
-        "message": "10 seconds left, prepare yourselves!",
-        "sound": "minecraft:block.note_block.pling"
+        "message": "10 seconds left, prepare yourselves!"
       },
       "5": {
-        "message": "5 seconds!",
-        "sound": "minecraft:block.note_block.bell"
+        "message": "5 seconds!"
       }
     }
   },
   "event_drop": {
     "duration": 90,
+    "bossbar_message": "Supply drop incoming in %s seconds",
     "before": [
       "say Supply drop incoming!",
       "title @a title {\"text\":\"Incoming Drop\",\"color\":\"gold\"}"
@@ -39,8 +38,7 @@
         "message": "1 minute until the drop!"
       },
       "10": {
-        "message": "10 seconds until drop!",
-        "sound": "minecraft:block.note_block.snare"
+        "message": "10 seconds until drop!"
       }
     }
   }
