@@ -96,7 +96,7 @@ Create a file at `config/bosstimer_commands.json`:
 ---
 
 ## 🎉 Credits
-Created and maintained by **Elijah Partney**.
+Created and maintained by **FreeSpinner**.
 
 ---
 
