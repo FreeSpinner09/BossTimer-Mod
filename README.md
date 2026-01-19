@@ -96,7 +96,8 @@ Create a file at `config/bosstimer_commands.json`:
 ---
 
 ## 🎉 Credits
-Created and maintained by **FreeSpinner**.
+- Created and maintained by **FreeSpinner**.
+- Created and Primarily used on [Cobblemon Vulkan](https://discord.gg/KuHnJSh8dz).
 
 ---
 
