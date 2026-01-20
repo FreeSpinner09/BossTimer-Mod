@@ -140,6 +140,7 @@ public class BossTimerMod implements ModInitializer {
                         for (String cmd : config.afterCommands()) {
                             server.getCommandManager().executeWithPrefix(server.getCommandSource(), cmd);
                         }
+                        timerData.future.cancel(false);
                         return;
                     }
 
